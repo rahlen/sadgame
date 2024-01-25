@@ -2,20 +2,34 @@
 
 Settings.WindowTitle = "My SadConsole Game";
 
-Game.Create(90, 30, Startup);
+Builder configuration = new Builder()
+    .SetScreenSize(90, 30)
+    .UseDefaultConsole()
+    .OnStart(Startup)
+    ;
+
+Game.Create(configuration);
 Game.Instance.Run();
 Game.Instance.Dispose();
 
 static void Startup(object? sender, GameHost host)
 {
-    
-  
-    Game.Instance.StartingConsole.Fill(new Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, Mirror.None);
-    Game.Instance.StartingConsole.Print(4, 4, "Hello from SadConsole");
-    Game.Instance.StartingConsole.DrawBox(new Rectangle(3, 3, 23, 3), ShapeParameters.CreateBorder(new ColoredGlyph(Color.Violet, Color.Black, 176)));
-    Game.Instance.StartingConsole.DrawBox(new Rectangle(3, 3, 23, 3), ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin,
-                                                    new ColoredGlyph(Color.Violet, Color.Black)));
-    Game.Instance.StartingConsole.DrawCircle(new Rectangle(5, 8, 16, 8), ShapeParameters.CreateFilled(new ColoredGlyph(Color.Violet, Color.Black, 176),
-                                                       new ColoredGlyph(Color.White, Color.Black)));
-    Game.Instance.StartingConsole.DrawLine(new Point(60, 5), new Point(66, 20), '$', Color.AnsiBlue, Color.AnsiBlueBright, Mirror.None);
+    if (Game.Instance.StartingConsole is null)
+        throw new NullReferenceException("You should never have this error if you used the UseDefaultConsole startup code.");
+
+    Console startingConsole = Game.Instance.StartingConsole;
+
+    startingConsole.Cursor.PrintAppearanceMatchesHost = false;
+
+    startingConsole.Cursor
+        .SetPrintAppearanceToHost()
+        .Move(0, 21)
+        .Print("Kato is my favorite dog")
+        .SetPrintAppearance(Color.Green)
+        .NewLine()
+        .Print("No, Birdie is my favorite dog");
+
+       
+    startingConsole.Cursor.IsVisible = true;
+    startingConsole.Cursor.IsEnabled = true;
 }
