@@ -58,4 +58,6 @@ internal class GameObject
 
         return true;
     }
+    public void RestoreMap(Map map) =>
+    _mapAppearance.CopyAppearanceTo(map.SurfaceObject.Surface[Position]);
 }

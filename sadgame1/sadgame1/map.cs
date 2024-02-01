@@ -24,7 +24,7 @@ internal class Map
             if (foundObject) continue;
 
             // If the code reaches here, we've got a good position, create the game object.
-            GameObject treasure = new GameObject(new ColoredGlyph(Color.Yellow, Color.Black, 'v'), randomPosition, _mapSurface);
+            Treasure treasure = new Treasure(randomPosition, _mapSurface);
             _mapObjects.Add(treasure);
             break;
         }
@@ -43,7 +43,7 @@ internal class Map
             if (foundObject) continue;
 
             // If the code reaches here, we've got a good position, create the game object.
-            GameObject monster = new GameObject(new ColoredGlyph(Color.Red, Color.Black, 'M'), randomPosition, _mapSurface);
+            Monster monster = new Monster(randomPosition, _mapSurface);
             _mapObjects.Add(monster);
             break;
         }
@@ -58,8 +58,11 @@ internal class Map
 
         UserControlledObject = new GameObject(new ColoredGlyph(Color.White, Color.Black, 2), _mapSurface.Surface.Area.Center, _mapSurface);
 
-        CreateTreasure();
-        CreateMonster();
+        for (int i = 0; i < 5; i++)
+        {
+            CreateTreasure();
+            CreateMonster();
+        }
     }
 
     private void FillBackground()
@@ -90,7 +93,14 @@ internal class Map
         gameObject = null;
         return false;
     }
+    public void RemoveMapObject(GameObject mapObject)
+    {
+        if (_mapObjects.Contains(mapObject))
+        {
+            _mapObjects.Remove(mapObject);
+            mapObject.RestoreMap(this);
+        }
+    }
 
-    
-    
+
 }
